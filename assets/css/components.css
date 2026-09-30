@@ -1,0 +1,1541 @@
+/* ==========================================================================
+   components.css - cabecalho, heroi, cartoes, programacao, rodape
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- cabecalho */
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-header);
+  height: 72px; /* teto de 80px no desktop */
+  display: flex;
+  align-items: center;
+  transition: background-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+  border-bottom: 1px solid transparent;
+}
+
+/* O cabecalho tem fundo desde o topo em todas as paginas. A versao
+   transparente sobre a fachada foi descartada: a foto tem parede clara no
+   meio do quadro, e link branco sobre ela reprovava no contraste. Ao rolar,
+   o cabecalho ganha filete e sombra para se separar do conteudo. */
+.site-header {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.site-header.is-stuck {
+  border-bottom-color: var(--hairline);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-header {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.header-inner {
+  width: 100%;
+  max-width: var(--max-w-wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+/* So o simbolo, sem o nome escrito ao lado, a pedido da casa. O nome segue
+   no markup como texto para leitor de tela, senao o link para a home ficaria
+   sem rotulo acessivel. */
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border-radius: var(--radius-field);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.brand-lockup:hover {
+  transform: scale(1.04);
+}
+
+.brand-lockup img {
+  width: 46px;
+  height: auto;
+}
+
+/* ---------------------------------------------------------------- navegacao */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+}
+
+.nav-link {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text);
+  padding: var(--space-2) 0;
+  position: relative;
+  white-space: nowrap;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after,
+.nav-item:focus-within > .nav-link::after {
+  transform: scaleX(1);
+}
+
+/* ---- submenu de Atividades ----
+   Abre no hover para mouse e no focus-within para teclado, sem JavaScript.
+   Os itens sao links de verdade, entao a ordem de tabulacao ja funciona. */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item > .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.nav-caret {
+  width: 0.9em;
+  height: 0.9em;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.nav-item:hover .nav-caret,
+.nav-item:focus-within .nav-caret {
+  transform: rotate(180deg);
+}
+
+.nav-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% 0;
+  min-width: 268px;
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  list-style: none;
+  display: grid;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    visibility var(--dur-base);
+}
+
+/* ponte invisivel: sem ela o menu fecha ao atravessar o vao com o mouse */
+.nav-menu::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--space-3) * -1) 0 auto 0;
+  height: var(--space-3);
+}
+
+.nav-item:hover .nav-menu,
+.nav-item:focus-within .nav-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.nav-menu a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-field);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.nav-menu a:hover,
+.nav-menu a:focus-visible {
+  background: var(--surface-3);
+  color: var(--accent-strong);
+}
+
+.nav-menu .icon {
+  color: var(--accent-strong);
+  flex: none;
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 0;
+  padding: var(--space-2);
+  cursor: pointer;
+  color: var(--text);
+  border-radius: var(--radius-field);
+}
+
+/* Troca hamburger por X a partir do aria-expanded do proprio botao.
+   Antes isso era feito em JS com elemento.hidden, que nao funciona: hidden e
+   propriedade de HTMLElement e estes icones sao SVGElement, entao a
+   atribuicao criava um expando e os dois icones apareciam juntos. */
+.nav-toggle .nav-toggle-close {
+  display: none;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-open {
+  display: none;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-close {
+  display: block;
+}
+
+@media (max-width: 860px) {
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav {
+    position: fixed;
+    inset: 72px 0 auto 0;
+    z-index: var(--z-menu);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-2) var(--gutter) var(--space-5);
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+  }
+
+  .nav[data-collapsed="true"] {
+    display: none;
+  }
+
+  .nav-link {
+    color: var(--text) !important;
+    text-shadow: none !important;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: var(--text-lg);
+  }
+
+  .nav-link::after {
+    display: none;
+  }
+
+  .nav-link[aria-current="page"] {
+    color: var(--accent-strong) !important;
+  }
+
+  /* No mobile o submenu nao flutua: vira lista recuada, sempre aberta, para
+     nao exigir um segundo toque so para revelar as atividades. */
+  .nav-item {
+    display: block;
+  }
+
+  .nav-item > .nav-link {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .nav-caret {
+    display: none;
+  }
+
+  .nav-menu {
+    position: static;
+    translate: none;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    min-width: 0;
+    margin: 0;
+    padding: var(--space-2) 0 var(--space-3) var(--space-4);
+    border: 0;
+    border-left: 2px solid var(--hairline);
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    margin-left: var(--space-2);
+  }
+
+  .nav-menu::before {
+    display: none;
+  }
+
+  .nav-menu a {
+    padding: var(--space-3) var(--space-2);
+    font-size: var(--text-base);
+  }
+}
+
+/* sem JavaScript o menu fica aberto em vez de inacessivel */
+.no-js .nav[data-collapsed="true"] {
+  display: flex;
+}
+
+/* ---------------------------------------------------------------- botoes */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap; /* rotulo nunca quebra em duas linhas */
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+/* ciano com tinta escura: 7.34:1 */
+.btn-primary {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-color: var(--accent);
+}
+
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--accent) 84%, var(--primary-darkest));
+  border-color: color-mix(in srgb, var(--accent) 84%, var(--primary-darkest));
+  box-shadow: var(--shadow-md);
+}
+
+.btn-quiet {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--hairline-strong);
+}
+
+.btn-quiet:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+}
+
+/* botao discreto sobre painel escuro solido: contorno claro, sem preenchimento
+   translucido, que sobre fundo escuro virava cinza sujo */
+.btn-on-dark {
+  background: transparent;
+  color: var(--light-1);
+  border-color: color-mix(in srgb, var(--light-1) 55%, transparent);
+}
+
+.btn-on-dark:hover {
+  background: var(--light-1);
+  color: var(--primary-darkest);
+  border-color: var(--light-1);
+}
+
+/* sobre foto o botao discreto precisa de borda solida para nao sumir */
+.btn-on-media {
+  background: color-mix(in srgb, var(--light-1) 16%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--light-1);
+  border-color: color-mix(in srgb, var(--light-1) 70%, transparent);
+}
+
+.btn-on-media:hover {
+  background: var(--light-1);
+  color: var(--primary-darkest);
+  border-color: var(--light-1);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn .icon {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+/* seta avanca no hover, reforcando a direcao da navegacao */
+.btn:hover .icon-arrow {
+  transform: translateX(3px);
+}
+
+.icon-arrow {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+/* link de texto com seta, usado no lugar de botao onde o tom pede discricao */
+.link-forward {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  text-decoration: none;
+  color: var(--text);
+}
+
+/* o traco acompanha so o rotulo: sobre a seta ele virava um risco solto */
+.link-forward-text {
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 2px;
+}
+
+.link-forward:hover {
+  color: var(--accent-strong);
+}
+
+.link-forward:hover .icon-arrow {
+  transform: translateX(3px);
+}
+
+/* ---------------------------------------------------------------- heroi */
+
+/* Split assimetrico em vez de texto sobre a foto.
+   A fachada tem parede clara no meio do quadro e a placa da casa dentro
+   dela, entao titulo branco sobreposto ficava ilegivel e ainda disputava
+   espaco com o logo do predio. O painel escuro resolve as duas coisas:
+   branco sobre #152D32 da 14.5:1 e a placa continua inteira ao lado. */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: stretch;
+  min-height: min(78dvh, 660px);
+  margin-top: 72px;
+  background: var(--surface-3);
+}
+
+.hero-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-5);
+  padding: clamp(2.5rem, 5vw, 4.5rem) clamp(1rem, 4vw, 4rem);
+  padding-left: max(var(--gutter), calc((100vw - var(--max-w-wide)) / 2 + var(--gutter)));
+}
+
+.hero-media {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 58%;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .hero-media {
+    order: -1;
+    aspect-ratio: 16 / 10;
+  }
+  .hero-panel {
+    padding-left: var(--gutter);
+    padding-block: clamp(2rem, 8vw, 3rem);
+  }
+}
+
+/* Painel no ciano palido #E2F0F3. Tinta escura da 12.41:1 e o azul profundo
+   do olho da 7.60:1. O botao principal, porem, nao pode ser ciano aqui: o
+   #42C8E6 separa so 1.69:1 do fundo palido e o botao sumiria. Ele passa a
+   ser o azul profundo, que separa 7.60:1 e leva texto branco a 8.87:1. */
+.hero-motto {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-strong); /* 7.85:1 sobre o cinza claro */
+  margin-bottom: var(--space-4);
+}
+
+.hero h1 {
+  color: var(--primary-deep); /* 7.60:1 sobre o ciano palido */
+  max-width: 20ch;
+}
+
+.hero-panel p {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  max-width: 40ch;
+}
+
+.hero .btn-primary {
+  background: var(--primary-darkest);
+  color: var(--light-1); /* 14.45:1 */
+  border-color: var(--primary-darkest);
+}
+
+.hero .btn-primary:hover {
+  background: var(--primary-deep);
+  border-color: var(--primary-deep);
+}
+
+.hero .btn-quiet {
+  border-color: color-mix(in srgb, var(--primary-deep) 40%, transparent);
+}
+
+.hero .btn-quiet:hover {
+  background: var(--light-1);
+  border-color: var(--primary-deep);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* ---------------------------------------------------------------- cabecalho de pagina interna */
+
+.page-head {
+  padding-top: calc(72px + var(--space-7));
+  padding-bottom: var(--space-6);
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+}
+
+.breadcrumb .icon {
+  width: 1em;
+  height: 1em;
+  opacity: 0.55;
+}
+
+.page-head h1 {
+  max-width: 24ch;
+}
+
+.page-head .lede {
+  margin-top: var(--space-4);
+}
+
+/* ---------------------------------------------------------------- etiquetas de dia e hora */
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  background: var(--surface-inverse);
+  color: var(--text-on-inverse);
+}
+
+.tag-open {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--hairline-strong);
+}
+
+.tag .icon {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+/* ------------------------------------------------- destaques de chegada */
+
+/* As quatro reunioes que a casa quer que quem chega veja primeiro. Tratamento
+   deliberadamente diferente dos cartoes de atividade, sem foto e na
+   horizontal, para nao parecer que a mesma grade aparece duas vezes. */
+/* Uma linha so: sao tres itens, e num grid de duas colunas o terceiro
+   ficava orfao embaixo. */
+.destaques {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.destaque {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-content: start;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-card);
+  text-decoration: none;
+  transition: transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.destaque:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+
+.destaque-icone {
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  color: var(--accent-strong);
+  flex: none;
+}
+
+.destaque-quando {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  margin-bottom: var(--space-1);
+}
+
+.destaque h3 {
+  margin-bottom: var(--space-2);
+}
+
+.destaque p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  max-width: none;
+  margin: 0;
+}
+
+@media (max-width: 1000px) {
+  .destaques {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------------------------------------------------------- grade de atividades */
+
+/* Todas as atividades com o mesmo peso e o mesmo espaco, a pedido da casa.
+   O bento assimetrico anterior dava destaque demais a algumas e punha o
+   bazar em primeiro lugar. */
+.activity-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.activity-card {
+  --cover-h: 190px;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  text-decoration: none;
+  transition: transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+}
+
+.activity-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+@media (max-width: 1000px) {
+  .activity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .activity-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.activity-cover {
+  position: relative;
+  height: var(--cover-h);
+  overflow: hidden;
+  background: var(--surface-3);
+  flex: none;
+}
+
+.activity-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.activity-card:hover .activity-cover img {
+  transform: scale(1.04);
+}
+
+/* Capa tipografica para as atividades que ainda nao tem fotografia.
+   E um padrao deliberado do sistema, com o icone como marca d'agua, nao
+   um espaco vazio esperando imagem. */
+.activity-cover-type {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    150deg,
+    var(--surface-3) 0%,
+    color-mix(in srgb, var(--accent) 24%, var(--surface-3)) 100%
+  );
+}
+
+.activity-cover-type .icon-watermark {
+  width: 58%;
+  max-width: 150px;
+  height: auto;
+  color: var(--accent-strong);
+  opacity: 0.26;
+}
+
+/* logo proprio da atividade, sobre branco, sem alterar a paleta do site */
+.activity-cover-logo {
+  display: grid;
+  place-items: center;
+  background: var(--light-1);
+  padding: var(--space-4);
+}
+
+.activity-cover-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.activity-body {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.activity-when {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.activity-body h3 {
+  margin: 0;
+}
+
+.activity-body p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  flex: 1;
+  max-width: none;
+}
+
+.activity-body .link-forward {
+  align-self: flex-start;
+  font-size: var(--text-xs);
+}
+
+/* ---------------------------------------------------------------- programacao semanal */
+
+/* Uma linha unica por compromisso, em ordem da semana, em vez de um cartao
+   por dia. A casa pediu leitura linear. O passe aparece preso a atividade em
+   que acontece, nao como aviso solto no rodape da secao. */
+/* Uma linha por atividade, em colunas de largura fixa que se alinham de
+   cima a baixo, alinhadas a esquerda. A versao centralizada anterior fazia
+   cada linha comecar num ponto diferente, o que serrilhava a vertical. */
+.agenda {
+  border-top: 1px solid var(--hairline-strong);
+}
+
+.agenda-item {
+  display: grid;
+  grid-template-columns: 10rem 9.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-5) var(--space-3);
+  border-bottom: 1px solid var(--hairline);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.agenda-item:hover {
+  background: var(--surface-2);
+}
+
+.agenda-dia {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.agenda-hora {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  /* sem nowrap: o horario do bazar e longo e, travado, invadia a coluna da
+     atividade. Na coluna larga ele quebra em duas linhas sem colidir. */
+  line-height: var(--leading-snug);
+}
+
+.agenda-nome {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.agenda-item:hover .agenda-nome {
+  color: var(--accent-strong);
+}
+
+/* o passe cai na linha de baixo, alinhado com a coluna da atividade */
+.agenda-passe {
+  grid-column: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.agenda-passe .icon {
+  color: var(--accent-strong);
+}
+
+@media (max-width: 720px) {
+  .agenda-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+    padding-inline: 0;
+  }
+  .agenda-passe {
+    grid-column: 1;
+  }
+}
+
+.agenda-nota {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+}
+
+.agenda-nota .icon {
+  color: var(--accent-strong);
+  margin-top: 0.1em;
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.agenda-nota p {
+  font-size: var(--text-base);
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .agenda-linha {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+    padding-block: var(--space-4);
+  }
+  .agenda-passe {
+    grid-column: 1;
+  }
+}
+
+/* ---------------------------------------------------------------- bloco editorial com imagem */
+
+.feature {
+  display: grid;
+  gap: var(--space-6) var(--space-7);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+}
+
+.feature-narrow {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+}
+
+.feature-flip .feature-media {
+  order: -1;
+}
+
+@media (max-width: 900px) {
+  .feature,
+  .feature-narrow {
+    grid-template-columns: 1fr;
+  }
+  .feature-flip .feature-media {
+    order: 0;
+  }
+}
+
+.feature-media {
+  border-radius: var(--radius-media);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.feature-media img {
+  width: 100%;
+  height: auto;
+}
+
+.figure-caption {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------- faixa de imagem larga */
+
+.band {
+  position: relative;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--primary-darkest);
+}
+
+.band-media {
+  position: absolute;
+  inset: 0;
+}
+
+.band-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Escurecimento forte do lado esquerdo, onde fica o texto. A foto tem
+   rostos claros e parede branca justamente ali, e o degrade anterior nao
+   segurava a legibilidade. */
+.band-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgb(21 45 50 / 0.97) 0%,
+    rgb(21 45 50 / 0.95) 30%,
+    rgb(21 45 50 / 0.86) 48%,
+    rgb(21 45 50 / 0.45) 78%,
+    rgb(21 45 50 / 0.3) 100%
+  );
+}
+
+.band-body {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--space-7);
+}
+
+.band-body h2,
+.band-body p {
+  color: var(--light-1);
+}
+
+.band-body p {
+  color: var(--light-3);
+  max-width: 46ch;
+}
+
+.band-body .btn {
+  margin-top: var(--space-6);
+}
+
+/* ---------------------------------------------------------------- citacao */
+
+.quote {
+  max-width: 44ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.quote blockquote {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  line-height: var(--leading-snug);
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0;
+}
+
+.quote figcaption {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------- pagina de atividade */
+
+/* Grade propria em vez de reaproveitar .feature: a midia precisa grudar no
+   topo e acompanhar a leitura, nao ficar centralizada ao lado de um texto
+   longo, o que abria um vazio no alto da coluna. */
+.activity-layout {
+  display: grid;
+  gap: var(--space-6) var(--space-7);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: start;
+}
+
+.activity-layout .page-media {
+  position: sticky;
+  top: calc(72px + var(--space-5));
+  border-radius: var(--radius-media);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.activity-layout .page-media img {
+  width: 100%;
+  height: auto;
+}
+
+/* Capa tipografica da pagina. O seletor repete .activity-layout porque
+   `.activity-layout .page-media` tem especificidade maior e sobrescrevia
+   este gradiente com o cinza de fundo. */
+.activity-layout .page-media-type,
+.page-media-type {
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  padding: var(--space-6);
+  background: linear-gradient(
+    150deg,
+    var(--surface-3) 0%,
+    color-mix(in srgb, var(--accent) 26%, var(--surface-3)) 100%
+  );
+}
+
+.page-media-type .icon-watermark {
+  width: 46%;
+  max-width: 170px;
+  height: auto;
+  color: var(--accent-strong);
+  opacity: 0.3;
+}
+
+.activity-layout .page-media-logo,
+.page-media-logo {
+  display: grid;
+  place-items: center;
+  background: var(--light-1);
+  padding: var(--space-6);
+}
+
+.page-media-logo img {
+  max-width: 320px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .activity-layout {
+    grid-template-columns: 1fr;
+  }
+  .activity-layout .page-media {
+    position: static;
+    order: -1;
+  }
+  .page-media-type {
+    min-height: 220px;
+  }
+}
+
+/* ---------------------------------------------------------------- conteudo de artigo */
+
+.prose > * + * {
+  margin-top: var(--space-5);
+}
+
+.prose h2 {
+  font-size: var(--text-2xl);
+  margin-top: var(--space-7);
+}
+
+.prose h3 {
+  margin-top: var(--space-6);
+}
+
+.prose ul,
+.prose ol {
+  max-width: var(--measure);
+  padding-left: var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.prose li::marker {
+  color: var(--accent-strong);
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* aviso de destaque, usado para o que a pessoa precisa saber antes de vir */
+.callout {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--surface-3);
+  border-left: 4px solid var(--accent);
+}
+
+.callout .icon {
+  color: var(--accent-strong);
+  flex: none;
+  margin-top: 0.15em;
+}
+
+.callout p {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.callout h4 {
+  margin-bottom: var(--space-2);
+}
+
+/* ---------------------------------------------------------------- colunas de dois tempos */
+
+.duo {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel {
+  padding: var(--space-6);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.panel-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  color: var(--accent-strong);
+  flex: none;
+}
+
+.panel p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  max-width: none;
+}
+
+/* ---------------------------------------------------------------- pix e doacao */
+
+.pix {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  padding: var(--space-6);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+}
+
+@media (max-width: 620px) {
+  .pix {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+}
+
+.pix-qr {
+  width: 180px;
+  height: 180px;
+  padding: var(--space-3);
+  border-radius: var(--radius-field);
+  background: var(--light-1);
+  border: 1px solid var(--hairline);
+}
+
+.pix-qr svg,
+.pix-qr img {
+  width: 100%;
+  height: 100%;
+}
+
+/* O campo da chave e o proprio botao de copia: um alvo so, com o icone
+   dentro, em vez de um texto e um botao separados. */
+.pix-key {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-5);
+  max-width: 100%;
+  text-align: left;
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-field);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.pix-key-value {
+  word-break: break-all;
+}
+
+.pix-key .icon {
+  flex-shrink: 0;
+  color: var(--accent-strong);
+}
+
+.pix-key:hover {
+  background: var(--surface-3);
+  border-color: var(--accent);
+}
+
+/* aviso temporario da copia, ancorado no rodape da janela */
+.copy-toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-6);
+  z-index: calc(var(--z-menu) + 10);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: calc(100vw - var(--space-6) * 2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: var(--surface-inverse);
+  color: var(--text-on-inverse);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, var(--space-3));
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.copy-toast[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy-toast {
+    transition-duration: 1ms;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* ---------------------------------------------------------------- contato */
+
+.contact-grid {
+  display: grid;
+  gap: var(--space-6) var(--space-7);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  /* cada item tem link proprio embaixo: sem folga larga eles se confundem */
+  gap: var(--space-7);
+}
+
+.contact-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.contact-list .panel-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.contact-list h3 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-1);
+}
+
+.contact-list p,
+.contact-list address {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-style: normal;
+  margin: 0;
+}
+
+.map-frame {
+  border-radius: var(--radius-media);
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  aspect-ratio: 4 / 3;
+}
+
+.map-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* ---------------------------------------------------------------- rodape */
+
+.site-footer {
+  background: var(--surface-inverse);
+  color: var(--text-on-inverse);
+  padding-block: var(--space-8) var(--space-6);
+  margin-top: var(--section-y);
+}
+
+.site-footer a {
+  color: var(--light-2);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.footer-top {
+  display: grid;
+  gap: var(--space-7);
+  grid-template-columns: minmax(0, 1.1fr) repeat(2, minmax(0, 0.95fr));
+}
+
+@media (max-width: 860px) {
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer-brand img {
+  width: 96px;
+  height: auto;
+  margin-bottom: var(--space-4);
+  /* usa a variante clara do logo: na versao padrao o "JESUS no LAR" e teal
+     escuro e desaparecia contra o fundo #152D32 do rodape */
+}
+
+.footer-brand p {
+  font-size: var(--text-sm);
+  color: var(--light-4);
+  max-width: 34ch;
+}
+
+.footer-col h4 {
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: var(--space-4);
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--light-1) 34%, transparent);
+}
+
+.footer-social:hover {
+  background: var(--accent);
+  color: var(--primary-darkest) !important;
+  border-color: var(--accent);
+  text-decoration: none !important;
+}
+
+.footer-bottom {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid color-mix(in srgb, var(--light-1) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--light-4);
+}
+
+.footer-bottom p {
+  margin: 0;
+  max-width: none;
+}
+
+/* ---------------------------------------------------------------- navegacao entre atividades */
+
+.sibling-nav {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: var(--space-7);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--hairline);
+}
+
+.sibling {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--hairline);
+  text-decoration: none;
+  transition: border-color var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.sibling:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.sibling-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.sibling strong {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+}

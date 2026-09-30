@@ -1,0 +1,10 @@
+# material de trabalho que nao vai para a previa publica
+_ferramentas/
+audios/
+uploads/
+conteudo-cejel.md
+
+__pycache__/
+*.pyc
+Thumbs.db
+desktop.ini

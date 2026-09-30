@@ -1,0 +1,139 @@
+/* ==========================================================================
+   Centro Espirita Jesus no Lar
+   tokens.css - paleta, tipografia, espacamento, raios, sombras
+
+   Paleta definida pela casa. Duas observacoes de acessibilidade que
+   determinam como cada cor pode ser usada:
+
+   1. O ciano #42C8E6 tem contraste 1.97:1 sobre branco, abaixo do minimo
+      WCAG AA de 4.5:1. Ele e cor de SUPERFICIE e ACENTO no tema claro,
+      nunca cor de texto. Texto sobre ciano usa #152D32 (7.34:1).
+   2. O cinza #747B7C da 4.31:1 sobre branco e reprova por pouco para corpo
+      de texto. Fica reservado para icones decorativos e texto grande.
+      Corpo de texto secundario usa #303E40 (11.1:1).
+
+   O site e de tema claro unico, por decisao da casa.
+   ========================================================================== */
+
+:root {
+  /* ---- paleta da casa, valores crus ---- */
+  --primary: #42c8e6;
+  --primary-deep: #0e469b; /* azul profundo da identidade da casa */
+  --primary-light: #68d3eb; /* ciano clareado: 5.11:1 sobre o azul profundo */
+  --primary-darkest: #152d32;
+  --primary-darker: #2597b1;
+  --primary-subtle: #e2f0f3;
+
+  --error: #e64258;
+  --warning: #e6d342;
+  --success: #42e679;
+
+  --light-1: #ffffff;
+  --light-2: #f3f4f4;
+  --light-3: #eaeded;
+  --light-4: #d3dada;
+
+  --dark-1: #111111;
+  --dark-2: #303e40;
+  --dark-3: #747b7c;
+  --dark-4: #9e9e9e;
+
+  /* passos intermediarios: quatro cinzas nao sustentam um sistema de dois
+     temas, entao estes tres tons ficam entre os valores da paleta */
+  --dark-surface-2: #182224;
+  --dark-surface-3: #223032;
+  --dark-hairline: #2b3a3d;
+
+  /* ---- tokens semanticos, tema claro ---- */
+  --surface: var(--light-1);
+  --surface-2: var(--light-2);
+  --surface-3: var(--primary-subtle);
+  --surface-inverse: var(--primary-darkest);
+
+  --text: var(--primary-darkest); /* 14.5:1 sobre branco */
+  --text-muted: var(--dark-2); /* 11.1:1 sobre branco */
+  --text-on-accent: var(--primary-darkest); /* 7.34:1 sobre ciano */
+  --text-on-inverse: var(--light-1); /* 14.5:1 sobre #152D32 */
+
+  --accent: var(--primary);
+  /* O azul profundo carrega todo texto e rotulo de acento. O #2597B1 que
+     ficava aqui dava 3.42:1 sobre branco e 2.93:1 sobre o ciano palido, e
+     reprovava ate para texto grande. O #0E469B da 8.87:1 e 7.60:1. */
+  --accent-strong: var(--primary-deep);
+  --accent-ink: var(--primary-darkest);
+
+  --hairline: var(--light-3);
+  --hairline-strong: var(--light-4);
+
+  --focus-ring: var(--primary-deep);
+
+  /* sombras tingidas com o matiz da marca, nunca preto puro */
+  --shadow-sm: 0 1px 2px rgb(21 45 50 / 0.06), 0 1px 3px rgb(21 45 50 / 0.08);
+  --shadow-md: 0 4px 12px rgb(21 45 50 / 0.07), 0 2px 4px rgb(21 45 50 / 0.06);
+  --shadow-lg: 0 18px 40px rgb(21 45 50 / 0.12), 0 4px 12px rgb(21 45 50 / 0.06);
+
+  /* ---- tipografia ---- */
+  --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Roboto", ui-sans-serif, system-ui, sans-serif;
+
+  /* base 17px: o publico da casa tem muita gente idosa */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.375rem;
+  --text-2xl: clamp(1.5rem, 1.2rem + 1.2vw, 1.875rem);
+  --text-3xl: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+  --text-4xl: clamp(2.125rem, 1.4rem + 3.4vw, 3.5rem);
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.7;
+
+  --measure: 65ch;
+  --measure-narrow: 52ch;
+
+  /* ---- espacamento ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* VISUAL_DENSITY 3: secoes respiram */
+  --section-y: clamp(3.5rem, 7vw, 6.5rem);
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --max-w: 1200px;
+  --max-w-wide: 1400px;
+
+  /* ---- raios ----
+     Regra unica do projeto: botoes e etiquetas sao pilula, cards e midia
+     usam 16px, campos de formulario usam 10px. Nada mais tem raio. */
+  --radius-card: 16px;
+  --radius-media: 16px;
+  --radius-field: 10px;
+  --radius-pill: 999px;
+
+  /* ---- movimento (MOTION_INTENSITY 4) ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 480ms;
+
+  --z-header: 100;
+  --z-menu: 200;
+}
+
+/* A casa pediu tela clara sempre. O tema escuro foi removido a pedido, e
+   color-scheme trava os controles nativos do navegador (barras de rolagem,
+   campos de formulario) no claro tambem. */
+:root {
+  color-scheme: light;
+}
