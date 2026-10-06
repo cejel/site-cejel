@@ -13,7 +13,7 @@ atividades/passe/                           sem horário próprio
 atividades/palestra-publica/                Quarta, 20h
 atividades/estudo-sistematizado/            Quinta, 20h
 atividades/evangelizacao-infantojuvenil/    Sábado, 9h30
-atividades/roda-de-conversa/                Sábado, 9h30
+atividades/roda-de-conversa/                Sábado, 10h30
 atividades/sopa-fraterna/                   Sábado, 11h30
 atividades/bazar/                           Segunda a sexta
 atividades/livraria/                        nos dias de atividade
