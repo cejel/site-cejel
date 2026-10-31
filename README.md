@@ -179,10 +179,8 @@ pessoa clica.
 
 ## Pendências
 
-- [ ] **Testar o QR do Pix com um aplicativo de banco de verdade.** O
-      payload segue o padrão EMV do Banco Central e o CRC foi validado
-      contra o vetor de teste oficial, mas nada substitui uma leitura real
-      antes de publicar.
+- [x] **Testar o QR do Pix com um aplicativo de banco de verdade.** Testado
+      em leitura real antes da publicação no domínio oficial.
 - [ ] Fotografar o Atendimento Fraterno e a Sopa Fraterna.
 - [ ] WhatsApp, esperando aprovação da presidente. Quando sair, o bloco
       entra na página de contato e a página de doações passa a ter um canal
@@ -193,9 +191,13 @@ pessoa clica.
 - [ ] Página de estrutura organizacional, quando a casa quiser. A navegação
       já aceita um quinto item sem quebrar em duas linhas.
 
-## Quando assumir o domínio
+## Domínio oficial
 
-O site foi feito para substituir o `cejesusnolar.com.br`, que hoje roda um
-WordPress abandonado. Os caminhos são todos relativos, então basta subir a
-pasta na raiz do domínio. Vale prever redirecionamento das URLs antigas, que
-usam o formato `?page_id=N` e `?p=N`.
+O site é servido pelo GitHub Pages em `www.cejesusnolar.com.br`; o domínio sem
+`www` redireciona para ele. O DNS fica no Registro.br e o e-mail continua no
+servidor da HostGator (`108.179.193.3`), que precisa seguir ativo enquanto as
+caixas forem usadas.
+
+As URLs antigas do WordPress, no formato `?page_id=N` e `?p=N`, abrem a página
+inicial. O `404.html` usa caminhos a partir da raiz e só funciona no domínio
+próprio, não no endereço `github.io`.

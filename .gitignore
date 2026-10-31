@@ -8,3 +8,6 @@ __pycache__/
 *.pyc
 Thumbs.db
 desktop.ini
+
+# copia publica do WordPress antigo, guardada so nesta maquina
+_backup-site-antigo/
